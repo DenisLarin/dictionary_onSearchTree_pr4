@@ -1,8 +1,11 @@
+import com.sun.glass.events.mac.NpapiEvent;
+
 /**
  * Created by denis__larin on 07.05.17.
  */
 public class BinarySearchTree<X extends Comparable<X>,E> {
     private Node<E,X> root;
+    private Node<E,X> parent;
     private int size;
 
     public BinarySearchTree() {
@@ -27,15 +30,83 @@ public class BinarySearchTree<X extends Comparable<X>,E> {
         while (returnElement!=null){
             int compareResult = returnElement.compareTo(key);
             //если ключ текущего элемента больше чем ключ искомого, то идем влево
-            if(compareResult>0)
+            if(compareResult>0){
+                parent = returnElement;
                 returnElement = returnElement.getLeftChild();
-            else if(compareResult<0)
+            }
+            else if(compareResult<0){
+                parent = returnElement;
                 returnElement = returnElement.getRightChild();
+            }
             else
                 break;
         }
         return returnElement;
     }
+
+    public Node<E,X> remove(X key) {
+        Node<E, X> removeNode = search(key);
+        if (removeNode == null) {
+            return null;
+        }
+        if(removeNode.getRightChild() == null) {
+            //если удаляем корень то
+            if (parent == null) {
+                root = removeNode.getLeftChild();
+            }
+            //если не корень
+            else {
+                int compareResult = parent.compareTo(removeNode.getKey());
+                //ключ родителя больше удаляемого ключа
+                if (compareResult > 0) {
+                    parent.setLeftChild(removeNode.getLeftChild());
+                } else if (compareResult < 0) {
+                    parent.setRightChild(removeNode.getRightChild());
+                }
+            }
+        }
+        else if (removeNode.getRightChild().getLeftChild() ==null){
+            removeNode.getRightChild().setLeftChild(removeNode.getLeftChild());
+            if(parent == null){
+                root = removeNode.getRightChild();
+            }
+            else{
+                int compareResult = parent.compareTo(removeNode.getKey());
+                if(compareResult>0){
+                    parent.setLeftChild(removeNode.getRightChild());
+                }
+                else if (compareResult<0){
+                    parent.setRightChild(removeNode.getRightChild());
+                }
+            }
+        }
+        else{
+            Node<E,X> leftMost = removeNode.getRightChild().getLeftChild();
+            Node<E,X> leftMostParent = removeNode.getRightChild();
+            while (leftMost.getLeftChild()!=null){
+                leftMostParent = leftMost;
+                leftMost = leftMost.getLeftChild();
+            }
+            leftMostParent.setLeftChild(leftMost.getRightChild());
+            leftMost.setLeftChild(removeNode.getLeftChild());
+            leftMostParent.setRightChild(removeNode.getRightChild());
+            if(parent == null){
+                root = leftMost;
+            }
+            else{
+                int compareResult = parent.compareTo(removeNode.getKey());
+                if(compareResult>0){
+                    parent.setLeftChild(leftMost);
+                }
+                else if (compareResult<0){
+                    parent.setRightChild(leftMost );
+                }
+            }
+        }
+        size--;
+        return removeNode;
+    }
+
     //обход дерева inOrder -- левый=>корень=>правый
     public void inOrder(){
         inOrder(root);

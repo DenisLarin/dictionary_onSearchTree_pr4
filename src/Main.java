@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         BinarySearchTree<Integer,String> binarySearchTree = new BinarySearchTree<>();
-        binarySearchTree.insert(8,"8");
+    /*    binarySearchTree.insert(8,"8");
         binarySearchTree.insert(5,"5");
         binarySearchTree.insert(12,"12");
         binarySearchTree.insert(3,"3");
@@ -34,7 +34,18 @@ public class Main {
         System.out.println("postOrder");
         binarySearchTree.postOrder();
         System.out.println("preorder");
-        binarySearchTree.preOrder();
+        binarySearchTree.preOrder();*/
 
+        binarySearchTree.insert(10,"10");
+        binarySearchTree.insert(5,"5");
+        binarySearchTree.insert(124,"124");
+        binarySearchTree.insert(3,"3");
+        binarySearchTree.insert(4,"4");
+        binarySearchTree.insert(1,"1");
+        binarySearchTree.insert(2,"2");
+
+        binarySearchTree.remove(124);
+        binarySearchTree.remove(3);
+        binarySearchTree.inOrder();
     }
 }
